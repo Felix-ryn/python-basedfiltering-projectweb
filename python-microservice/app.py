@@ -21,7 +21,7 @@ app = Flask(__name__)
 
 # Ambil data dari backend Node.js
 try:
-    response = requests.get("http://localhost:5003/api/job-data")
+    response = requests.get("http://localhost:5003/api/job-fix")
     if response.status_code != 200:
         raise Exception("Gagal mengambil data dari backend API")
 
@@ -109,10 +109,32 @@ def recommend():
 
     filtered_df = filtered_df[[
         'job_title', 'company_name', 'company_location', 'company_email', 'job_type', 'score',
-        'job_qualifications', 'work_hours', 'company_size', 'job_desc'
+        'job_qualifications', 'work_hours', 'company_size', 'job_desc', 'industry_stats', 'job_skills', 'job_skills_1'
     ]]
 
+    # 💡 Isi otomatis jika kolom kosong
+    for idx, row in filtered_df.iterrows():
+        if not row['industry_stats']:
+            filtered_df.at[idx, 'industry_stats'] = row['job_qualifications']
+        if not row['job_skills']:
+            filtered_df.at[idx, 'job_skills'] = row['job_qualifications']
+        if not row['job_skills_1']:
+            filtered_df.at[idx, 'job_skills_1'] = row['job_qualifications']
+
     results = filtered_df.sort_values(by='score', ascending=False).to_dict(orient='records')
+
+    # 🔁 Pastikan tidak null di Node.js
+    for job in results:
+        for field in ['industry_stats', 'job_skills', 'job_skills_1']:
+            if job.get(field) is None:
+                job[field] = ''
+
+    print("Data yang dikirim ke Node.js:")
+    if results:
+        print(results[0])
+    else:
+        print("Tidak ada hasil")
+
     job_types = sorted(set(job['job_type'] for job in results if job['job_type']))
 
     return jsonify({'results': results, 'job_types': job_types, 'message': None})

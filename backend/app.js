@@ -4,7 +4,7 @@ const { Pool } = require('pg');
 const fetch = require('node-fetch');
 
 const jobTrendingRoutes = require('./routes/jobTrending');
-const jobDataRoutes = require('./routes/jobData');
+const jobFixRoutes = require('./routes/jobFix');
 
 const app = express();
 const PORT = 5003;
@@ -49,13 +49,47 @@ app.post('/api/search', async (req, res) => {
     }
 
     const data = await response.json();
-    const jobTitles = data.results ? data.results.map(job => job.job_title) : [];
+    const jobs = data.results || [];
+    console.log('Data dari Python (contoh):', jobs[0]);
 
-    for (const title of jobTitles) {
+    for (const job of jobs) {
+      if (!job.job_title) {
+        console.warn('Lewati data karena job_title kosong:', job);
+        continue;
+      }
+
       try {
         await pool.query(
-          'INSERT INTO job_fix_2 (job_title) VALUES ($1) ON CONFLICT DO NOTHING',
-          [title]
+          `INSERT INTO job_fix_2 (
+            job_title,
+            company_name,
+            company_location,
+            company_size,
+            industry_stats,
+            job_qualifications,
+            job_skills,
+            job_skills_1,
+            job_type,
+            work_hours,
+            company_email,
+            job_desc
+          )
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+          ON CONFLICT DO NOTHING`,
+          [
+            job.job_title,
+            job.company_name ?? null,
+            job.company_location ?? null,
+            job.company_size ?? null,
+            job.industry_stats ?? null,
+            job.job_qualifications ?? null,
+            job.job_skills ?? null,
+            job.job_skills_1 ?? null,
+            job.job_type ?? null,
+            job.work_hours ?? null,
+            job.company_email ?? null,
+            job.job_desc ?? null
+          ]
         );
       } catch (err) {
         console.error('Insert gagal:', err.message);
@@ -63,15 +97,15 @@ app.post('/api/search', async (req, res) => {
     }
 
     res.json(data);
-    
+
   } catch (error) {
     console.error('Server error:', error.message);
     res.status(500).json({ error: 'Terjadi kesalahan di server' });
   }
 });
 
-// Tambahkan route untuk job data dan job trending
-app.use('/api/job-data', jobDataRoutes);      // Endpoint untuk Python ambil data
+// Tambahkan route
+app.use('/api/job-fix', jobFixRoutes);      
 app.use('/api/job-trending', jobTrendingRoutes);
 
 app.listen(PORT, () => {
