@@ -63,6 +63,7 @@ app.post('/api/search', async (req, res) => {
     }
 
     res.json(data);
+    
   } catch (error) {
     console.error('Server error:', error.message);
     res.status(500).json({ error: 'Terjadi kesalahan di server' });
