@@ -1,44 +1,37 @@
 # 🧰 Python-Based Filtering Web Project
 
-Aplikasi web sederhana berbasis Python untuk melakukan filtering konten (teks dan/atau gambar) melalui web interface. Cocok sebagai prototype edukasi atau modul micro‑service.
+A lightweight and modular Python web application for content filtering. This project allows users to submit text or images through a web interface, which are then processed using customizable filtering rules such as blocklists, allowlists, or regular expressions. Designed for learning, prototyping, or microservice integration.
 
 ---
 
 ## 🔍 Overview
 
-Aplikasi ini memungkinkan pengguna untuk meng‑upload teks atau gambar melalui web form, kemudian memprosesnya sesuai aturan filter (blocklist, allowlist, regex, dll.). Hasilnya kembali ditampilkan dengan konten yang telah ter-filter.
+This application offers a user-friendly interface for submitting content and reviewing filtered results. Whether you're removing sensitive keywords from user input or pre-processing uploaded images, the project demonstrates a full-stack implementation of a filtering pipeline using Python and Flask.
+
+The core functionality includes:
+- Keyword-based text filtering (with support for blocklists and regex)
+- Optional image processing using OpenCV or Pillow
+- Configurable filtering rules
+- Clear web UI for interacting with the system
 
 ---
 
 ## 🧩 Tech Stack
 
-- **Backend**: Python + Flask (alternatif: FastAPI)
-- **Frontend**: HTML, CSS, JavaScript (vanilla/Bootstrap)
-- **Filtering logic**: Modul Python (`filter.py`)
-  - Filter teks: stopwords, keyword-based, regex
-  - File-based allowlist/blocklist (`.txt`, `.yaml`)
-  - Opsional: filter gambar via OpenCV / PIL
+- **Backend**: Python, Flask
+- **Frontend**: HTML, CSS, JavaScript
+- **Content Filtering**: Python-based logic (custom filtering module)
 - **Dependencies**:
-  - `flask`
-  - `werkzeug`
-  - `opencv-python`, `Pillow` (jika diperlukan)
-  - `pytest` (untuk testing)
+  - `Flask` – Web framework
+  - `Werkzeug` – Utility for request handling
+  - `OpenCV` / `Pillow` – For optional image filtering
+  - `Pytest` – Unit testing framework
 
 ---
 
-## 📂 Struktur Direktori
+## 🚀 Getting Started
 
-```text
-python‑basedfiltering‑projectweb/
-├── app.py                # Entry point aplikasi
-├── filter.py             # Modul filter utama
-├── templates/            # HTML Jinja2 template
-│   └── index.html
-├── static/               # CSS, JS, asset lainnya
-├── data/                 # file allowlist/blocklist
-│   ├── blocklist.txt
-│   └── allowlist.txt
-├── uploads/              # (opsional) direktori hasil upload
-├── tests/                # unit test dengan pytest
-├── requirements.txt      # dependensi pip
-└── README.md
+### 1. Clone the repository
+```bash
+git clone https://github.com/Felix-ryn/python-basedfiltering-projectweb.git
+cd python-basedfiltering-projectweb
