@@ -18,10 +18,10 @@ This application provides a user-friendly interface for submitting content and r
 
 ## 🧩 Tech Stack
 
-| Component           | Technology            |
+| Component           | Technology             |
 |---------------------|------------------------|
-| Backend             | Python 3, Flask        |
-| Frontend            | HTML, CSS, JavaScript |
+| Backend             | Python 3, NODE EXPRESS |
+| Frontend            | HTML, CSS, JavaScript  |
 | Filtering Logic     | Custom Python module   |
 | Image Processing    | Pillow or OpenCV       |
 | Testing             | Pytest                 |
